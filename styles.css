@@ -19,6 +19,12 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
+.count {
+    font-weight: bolder;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: xx-large;
+}
+
 .metronome {
     display: flex;
     width: 350px;
