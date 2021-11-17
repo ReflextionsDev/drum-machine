@@ -76,3 +76,8 @@ body {
     transform-origin: bottom center;
     animation: tick 1200ms ease-in-out infinite;
 }
+
+.instruments {
+    display: flex;
+    flex-direction: column;
+}

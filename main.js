@@ -1,30 +1,25 @@
-// Stretch Goals
-// - Multiple times
-// - Tempo set
-// - Time signature (metronome count)
-// - Change time input to bar display thingy
-
 // --- Audio Files --
 const sfx_tick = new Audio('sounds/tick.mp3');
 const sfx_tock = new Audio('sounds/tock.mp3')
 
 // --- Document Elements ---
 const tickCountText = document.querySelector('.count')
+const beatsInput = document.querySelector('#beatsInput')
 
 // --- Variables ---
 let tickCount = 0
 let tickMax = 4
+let speed = 600
 
 // --- Runtime ---
-
-setTimeout(setupUpdate, 300);
+setTimeout(setupUpdate, speed/2);
 
 function setupUpdate() {
-    setInterval(update, 600);
+    interval = setInterval(update, speed);
 }
 
 function update() {
-
+    tickMax = Number(beatsInput.value)
     tickCount = tickCount >= tickMax ? 1 : tickCount + 1
     tickCountText.innerHTML = tickCount
 
