@@ -1,36 +1,77 @@
-// Audio Files
-const tick = new Audio('sounds/tick.mp3');
-const tock = new Audio('sounds/tock.mp3')
-const kickdrum = new Audio('sounds/kick-drum.mp3')
-const hihat = new Audio('sounds/hi-hat.mp3')
-const snaredrum = new Audio('sounds/snare-drum.mp3')
+// Stretch Goals
+// - Multiple times
+// - Tempo set
+// - Time signature (metronome count)
+// - Change time input to bar display thingy
 
-// Document Elements
+// --- Audio Files --
+const sfx_tick = new Audio('sounds/tick.mp3');
+const sfx_tock = new Audio('sounds/tock.mp3')
+
+// --- Document Elements ---
 const tickCountText = document.querySelector('.count')
-const metronomeToggle = document.querySelector('#metronomeToggle')
-const kickdrumToggle = document.querySelector('#kick-drum')
-const hihatToggle = document.querySelector('#hi-hat')
-const snaredrumToggle = document.querySelector('#snare-drum')
 
-// Variables
+// --- Variables ---
 let tickCount = 0
+let tickMax = 4
 
-// This function is called every 600ms
-function update() {
+// --- Runtime ---
 
-    tickCount = tickCount >= 4 ? 1 : tickCount + 1
-    tickCountText.innerHTML = tickCount
+setTimeout(setupUpdate, 300);
 
-    if (metronomeToggle.checked) {tickCount === 4 ? tock.play() : tick.play()}
-    if (kickdrumToggle.checked) {kickdrum.play()}
-    if (hihatToggle.checked) {hihat.play()}
-    if (snaredrumToggle.checked) {snaredrum.play()}
-}
-
-// This function sets up update() to be called every 600ms
 function setupUpdate() {
     setInterval(update, 600);
 }
 
-// Call setupUpdate() once after 300ms
-setTimeout(setupUpdate, 300);
+function update() {
+
+    tickCount = tickCount >= tickMax ? 1 : tickCount + 1
+    tickCountText.innerHTML = tickCount
+
+    instruments.forEach((instrument) => {
+        updateInstrument(instrument)
+        {
+            if (instrument.toggle) {
+                if (instrument.beats.includes(tickCount)) {
+                    if (instrument.name === 'metronome') {
+                        (tickCount === tickMax) ? sfx_tock.play() : sfx_tick.play()
+                    } else {
+                        instrument.sfx.play()
+                    }
+                }
+            }
+        }
+    })
+}
+
+// --- Instruments ---
+
+class Instrument {
+    constructor(name, toggle, beats, sfx) {
+        this.name = name
+        this.toggleInput = toggle
+        this.beatsInput = beats
+        this.sfx = sfx
+    }
+}
+
+const metronome = createInstrument('metronome')
+const kickdrum = createInstrument('kickdrum')
+const hihat = createInstrument('hihat')
+const snaredrum = createInstrument('snaredrum')
+
+let instruments = [metronome, kickdrum, hihat, snaredrum]
+
+function createInstrument(instrument) {
+    const toggle = document.querySelector(`#${instrument}Toggle`)
+    const beats = document.querySelector(`#${instrument}Beats`)
+    const sfx = new Audio(`sounds/${instrument}.mp3`)
+
+    const newInstrument = new Instrument(instrument, toggle, beats, sfx)
+    return newInstrument
+}
+
+function updateInstrument(instrument) {
+    instrument.toggle = instrument.toggleInput.checked,
+        instrument.beats = instrument.beatsInput.value.split(",").map(Number)
+}
